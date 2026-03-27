@@ -13,6 +13,34 @@
             color: #333;
         }
         h1 { color: #d6336c; }
+        
+        /* Login Screen Styles */
+        #login-screen {
+            margin-top: 15vh;
+            background: white;
+            padding: 40px 20px;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            display: inline-block;
+            border: 2px dashed #d6336c;
+            max-width: 90%;
+            width: 320px;
+        }
+        #login-screen h2 { color: #d6336c; margin-top: 0; }
+        #passcode-input {
+            padding: 12px;
+            font-size: 1rem;
+            border: 2px solid #ffb3c6;
+            border-radius: 8px;
+            margin-top: 15px;
+            margin-bottom: 15px;
+            width: 80%;
+            text-align: center;
+        }
+        #passcode-input:focus { outline: none; border-color: #d6336c; }
+        #error-msg { color: #d6336c; font-weight: bold; display: none; margin-top: 10px; font-size: 0.9rem;}
+
+        /* Coupon Styles */
         .coupon-container { 
             display: flex; 
             flex-wrap: wrap; 
@@ -34,7 +62,6 @@
         .coupon h3 { margin-top: 0; color: #d6336c; font-size: 1.2rem;}
         .desc { font-size: 0.95rem; margin-bottom: 20px;}
         
-        /* Main Redeem Button */
         .btn { 
             background-color: #d6336c; 
             color: white; 
@@ -44,10 +71,10 @@
             cursor: pointer; 
             font-weight: bold; 
             width: 100%;
+            font-size: 1rem;
         }
         .btn:hover { background-color: #a61e4d; }
         
-        /* Styles for when a coupon is used */
         .redeemed { 
             background-color: #f8f9fa; 
             border-color: #adb5bd; 
@@ -56,7 +83,7 @@
             opacity: 0.8;
         }
         .redeemed h3 { color: #6c757d; text-decoration: line-through; }
-        .redeemed .btn { display: none; } /* Hides the redeem button */
+        .redeemed .btn { display: none; } 
         
         .redeemed-text { 
             color: #a61e4d; 
@@ -67,7 +94,6 @@
         }
         .redeemed .redeemed-text { display: block; }
 
-        /* New Undo Button */
         .btn-undo {
             background-color: transparent;
             color: #6c757d;
@@ -79,18 +105,36 @@
             display: none;
         }
         .btn-undo:hover { background-color: #e9ecef; }
-        .redeemed .btn-undo { display: inline-block; } /* Shows undo only when redeemed */
+        .redeemed .btn-undo { display: inline-block; } 
 
     </style>
 </head>
 <body>
 
-    <h1>Special Coupons Just For You ❤️</h1>
-    <p>Choose wisely! Tap redeem and show me your screen to cash it in.</p>
-    
-    <div class="coupon-container" id="coupons"></div>
+    <div id="login-screen">
+        <h2>🔒 Top Secret</h2>
+        <p>Enter the magic word to unlock your gift!</p>
+        <input type="text" id="passcode-input" placeholder="Type here...">
+        <br>
+        <button class="btn" style="width: 80%;" onclick="checkPasscode()">Unlock</button>
+        <p id="error-msg">Oops! That's not it. Try again! 💕</p>
+    </div>
+
+    <div id="main-content" style="display: none;">
+        <h1>Special Coupons Just For Ni ❤️</h1>
+        <p>Tap redeem and show Han </p>
+        <div class="coupon-container" id="coupons"></div>
+    </div>
 
     <script>
+        // ==========================================
+        // 1. SET YOUR SECRET PASSCODE HERE
+        // ==========================================
+        const SECRET_PASSCODE = "hanian"; // Change this to whatever you want!
+        
+        // ==========================================
+        // 2. EDIT YOUR COUPONS HERE
+        // ==========================================
         const couponsData = [
             { id: 'c1', title: '🥞 Breakfast in Bed', desc: 'I will make your favorite breakfast.' },
             { id: 'c2', title: '💆‍♀️ 30-Minute Massage', desc: 'A relaxing massage, anytime you want.' },
@@ -100,42 +144,32 @@
             { id: 'c6', title: '🍷 Evening Drinks', desc: 'I will prepare your favorite cocktail or pour the wine.' }
         ];
 
+        // --- Passcode Logic ---
+        function checkPasscode() {
+            // Get what she typed, make it lowercase, and remove extra spaces
+            const input = document.getElementById('passcode-input').value.toLowerCase().trim();
+            
+            // Check if it matches (also making your secret code lowercase just in case)
+            if (input === SECRET_PASSCODE.toLowerCase()) {
+                // Save that she unlocked it so she doesn't have to type it every time she opens the link
+                localStorage.setItem('siteUnlocked', 'true');
+                showCoupons();
+            } else {
+                // Show error message
+                document.getElementById('error-msg').style.display = 'block';
+            }
+        }
+
+        function showCoupons() {
+            document.getElementById('login-screen').style.display = 'none';
+            document.getElementById('main-content').style.display = 'block';
+            renderCoupons();
+        }
+
+        // --- Coupon Logic ---
         const container = document.getElementById('coupons');
 
         function renderCoupons() {
             container.innerHTML = '';
             couponsData.forEach(coupon => {
                 const isRedeemed = localStorage.getItem(coupon.id) === 'true';
-                
-                const card = document.createElement('div');
-                card.className = `coupon ${isRedeemed ? 'redeemed' : ''}`;
-                
-                card.innerHTML = `
-                    <h3>${coupon.title}</h3>
-                    <p class="desc">${coupon.desc}</p>
-                    <button class="btn" onclick="redeem('${coupon.id}')">Redeem Now</button>
-                    <div class="redeemed-text">Redeemed! ✨</div>
-                    <button class="btn-undo" onclick="undoRedeem('${coupon.id}')">Oops, Undo</button>
-                `;
-                container.appendChild(card);
-            });
-        }
-
-        function redeem(id) {
-            if(confirm('Are you sure you want to redeem this coupon right now? Make sure to show me!')) {
-                localStorage.setItem(id, 'true'); 
-                renderCoupons(); 
-            }
-        }
-
-        // NEW FUNCTION: Removes the saved 'true' state from the browser
-        function undoRedeem(id) {
-            localStorage.removeItem(id);
-            renderCoupons();
-        }
-
-        renderCoupons();
-    </script>
-
-</body>
-</html>
