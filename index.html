@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Love Coupons ❤️</title>
+    <style>
+        /* This section styles the website to look cute and mobile-friendly */
+        body { 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            background-color: #ffe6e6; /* Soft pink background */
+            text-align: center; 
+            padding: 20px; 
+            color: #333;
+        }
+        h1 { color: #d6336c; }
+        .coupon-container { 
+            display: flex; 
+            flex-wrap: wrap; 
+            justify-content: center; 
+            gap: 20px; 
+            max-width: 800px; 
+            margin: 0 auto; 
+        }
+        .coupon { 
+            background: white; 
+            border: 2px dashed #d6336c; 
+            border-radius: 12px; 
+            padding: 20px; 
+            width: 250px; 
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1); 
+            transition: transform 0.2s; 
+        }
+        .coupon:hover { transform: scale(1.03); }
+        .coupon h3 { margin-top: 0; color: #d6336c; font-size: 1.2rem;}
+        .desc { font-size: 0.95rem; margin-bottom: 20px;}
+        .btn { 
+            background-color: #d6336c; 
+            color: white; 
+            border: none; 
+            padding: 10px 20px; 
+            border-radius: 20px; 
+            cursor: pointer; 
+            font-weight: bold; 
+            width: 100%;
+        }
+        .btn:hover { background-color: #a61e4d; }
+        
+        /* Styles for when a coupon is used */
+        .redeemed { 
+            background-color: #f8f9fa; 
+            border-color: #adb5bd; 
+            color: #6c757d; 
+            transform: none !important; 
+            opacity: 0.7;
+        }
+        .redeemed h3 { color: #6c757d; text-decoration: line-through; }
+        .redeemed .btn { display: none; }
+        .redeemed-text { 
+            color: #a61e4d; 
+            font-weight: bold; 
+            margin-top: 10px; 
+            display: none; 
+        }
+        .redeemed .redeemed-text { display: block; }
+    </style>
+</head>
+<body>
+
+    <h1>Special Coupons Just For You ❤️</h1>
+    <p>Choose wisely! Tap redeem and show me your screen to cash it in.</p>
+    
+    <div class="coupon-container" id="coupons"></div>
+
+    <script>
+        // THIS IS WHERE YOU EDIT YOUR COUPONS
+        // Add, remove, or change the titles and descriptions here
+        const couponsData = [
+            { id: 'c1', title: '🥞 Breakfast in Bed', desc: 'I will make your favorite breakfast.' },
+            { id: 'c2', title: '💆‍♀️ 30-Minute Massage', desc: 'A relaxing massage, anytime you want.' },
+            { id: 'c3', title: '🍽️ Dining Out', desc: 'Your choice of restaurant, my treat!' },
+            { id: 'c4', title: '🎬 Movie Picker', desc: 'You choose the movie, I bring the snacks.' },
+            { id: 'c5', title: '🧹 Chore Pass', desc: 'Pass off one of your chores to me for the day.' },
+            { id: 'c6', title: '🍷 Evening Drinks', desc: 'I will prepare your favorite cocktail or pour the wine.' }
+        ];
+
+        const container = document.getElementById('coupons');
+
+        function renderCoupons() {
+            container.innerHTML = '';
+            couponsData.forEach(coupon => {
+                // Check if the browser remembers this coupon being redeemed
+                const isRedeemed = localStorage.getItem(coupon.id) === 'true';
+                
+                const card = document.createElement('div');
+                card.className = `coupon ${isRedeemed ? 'redeemed' : ''}`;
+                
+                card.innerHTML = `
+                    <h3>${coupon.title}</h3>
+                    <p class="desc">${coupon.desc}</p>
+                    <button class="btn" onclick="redeem('${coupon.id}')">Redeem Now</button>
+                    <div class="redeemed-text">Redeemed! ✨</div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        function redeem(id) {
+            // Ask for confirmation so she doesn't click it by accident
+            if(confirm('Are you sure you want to redeem this coupon right now? Make sure to show me!')) {
+                localStorage.setItem(id, 'true'); // Save to browser memory
+                renderCoupons(); // Refresh the visual
+            }
+        }
+
+        // Load coupons when the page opens
+        renderCoupons();
+    </script>
+
+</body>
+</html>
