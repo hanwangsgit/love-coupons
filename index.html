@@ -5,10 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Love Coupons ❤️</title>
     <style>
-        /* This section styles the website to look cute and mobile-friendly */
         body { 
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
-            background-color: #ffe6e6; /* Soft pink background */
+            background-color: #ffe6e6; 
             text-align: center; 
             padding: 20px; 
             color: #333;
@@ -34,6 +33,8 @@
         .coupon:hover { transform: scale(1.03); }
         .coupon h3 { margin-top: 0; color: #d6336c; font-size: 1.2rem;}
         .desc { font-size: 0.95rem; margin-bottom: 20px;}
+        
+        /* Main Redeem Button */
         .btn { 
             background-color: #d6336c; 
             color: white; 
@@ -52,17 +53,34 @@
             border-color: #adb5bd; 
             color: #6c757d; 
             transform: none !important; 
-            opacity: 0.7;
+            opacity: 0.8;
         }
         .redeemed h3 { color: #6c757d; text-decoration: line-through; }
-        .redeemed .btn { display: none; }
+        .redeemed .btn { display: none; } /* Hides the redeem button */
+        
         .redeemed-text { 
             color: #a61e4d; 
             font-weight: bold; 
             margin-top: 10px; 
+            margin-bottom: 15px;
             display: none; 
         }
         .redeemed .redeemed-text { display: block; }
+
+        /* New Undo Button */
+        .btn-undo {
+            background-color: transparent;
+            color: #6c757d;
+            border: 1px solid #6c757d;
+            padding: 5px 15px;
+            border-radius: 15px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            display: none;
+        }
+        .btn-undo:hover { background-color: #e9ecef; }
+        .redeemed .btn-undo { display: inline-block; } /* Shows undo only when redeemed */
+
     </style>
 </head>
 <body>
@@ -73,8 +91,6 @@
     <div class="coupon-container" id="coupons"></div>
 
     <script>
-        // THIS IS WHERE YOU EDIT YOUR COUPONS
-        // Add, remove, or change the titles and descriptions here
         const couponsData = [
             { id: 'c1', title: '🥞 Breakfast in Bed', desc: 'I will make your favorite breakfast.' },
             { id: 'c2', title: '💆‍♀️ 30-Minute Massage', desc: 'A relaxing massage, anytime you want.' },
@@ -89,7 +105,6 @@
         function renderCoupons() {
             container.innerHTML = '';
             couponsData.forEach(coupon => {
-                // Check if the browser remembers this coupon being redeemed
                 const isRedeemed = localStorage.getItem(coupon.id) === 'true';
                 
                 const card = document.createElement('div');
@@ -100,20 +115,25 @@
                     <p class="desc">${coupon.desc}</p>
                     <button class="btn" onclick="redeem('${coupon.id}')">Redeem Now</button>
                     <div class="redeemed-text">Redeemed! ✨</div>
+                    <button class="btn-undo" onclick="undoRedeem('${coupon.id}')">Oops, Undo</button>
                 `;
                 container.appendChild(card);
             });
         }
 
         function redeem(id) {
-            // Ask for confirmation so she doesn't click it by accident
             if(confirm('Are you sure you want to redeem this coupon right now? Make sure to show me!')) {
-                localStorage.setItem(id, 'true'); // Save to browser memory
-                renderCoupons(); // Refresh the visual
+                localStorage.setItem(id, 'true'); 
+                renderCoupons(); 
             }
         }
 
-        // Load coupons when the page opens
+        // NEW FUNCTION: Removes the saved 'true' state from the browser
+        function undoRedeem(id) {
+            localStorage.removeItem(id);
+            renderCoupons();
+        }
+
         renderCoupons();
     </script>
 
