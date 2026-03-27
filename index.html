@@ -121,8 +121,8 @@
     </div>
 
     <div id="main-content" style="display: none;">
-        <h1>Special Coupons Just For Ni ❤️</h1>
-        <p>Tap redeem and show Han </p>
+        <h1>Special Coupons Just For You ❤️</h1>
+        <p>Choose wisely! Tap redeem and show me your screen to cash it in.</p>
         <div class="coupon-container" id="coupons"></div>
     </div>
 
@@ -130,7 +130,7 @@
         // ==========================================
         // 1. SET YOUR SECRET PASSCODE HERE
         // ==========================================
-        const SECRET_PASSCODE = "hanian"; // Change this to whatever you want!
+        const SECRET_PASSCODE = "iloveyou"; // Change this to whatever you want!
         
         // ==========================================
         // 2. EDIT YOUR COUPONS HERE
@@ -173,3 +173,39 @@
             container.innerHTML = '';
             couponsData.forEach(coupon => {
                 const isRedeemed = localStorage.getItem(coupon.id) === 'true';
+                
+                const card = document.createElement('div');
+                card.className = `coupon ${isRedeemed ? 'redeemed' : ''}`;
+                
+                card.innerHTML = `
+                    <h3>${coupon.title}</h3>
+                    <p class="desc">${coupon.desc}</p>
+                    <button class="btn" onclick="redeem('${coupon.id}')">Redeem Now</button>
+                    <div class="redeemed-text">Redeemed! ✨</div>
+                    <button class="btn-undo" onclick="undoRedeem('${coupon.id}')">Oops, Undo</button>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        function redeem(id) {
+            if(confirm('Are you sure you want to redeem this coupon right now? Make sure to show me!')) {
+                localStorage.setItem(id, 'true'); 
+                renderCoupons(); 
+            }
+        }
+
+        function undoRedeem(id) {
+            localStorage.removeItem(id);
+            renderCoupons();
+        }
+
+        // --- Start Up Check ---
+        // When she opens the page, check if she already unlocked it in the past
+        if (localStorage.getItem('siteUnlocked') === 'true') {
+            showCoupons();
+        }
+    </script>
+
+</body>
+</html>
