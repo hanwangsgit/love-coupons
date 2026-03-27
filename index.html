@@ -14,7 +14,6 @@
         }
         h1 { color: #d6336c; }
         
-        /* Login Screen Styles */
         #login-screen {
             margin-top: 15vh;
             background: white;
@@ -40,7 +39,6 @@
         #passcode-input:focus { outline: none; border-color: #d6336c; }
         #error-msg { color: #d6336c; font-weight: bold; display: none; margin-top: 10px; font-size: 0.9rem;}
 
-        /* Coupon Styles */
         .coupon-container { 
             display: flex; 
             flex-wrap: wrap; 
@@ -127,16 +125,10 @@
     </div>
 
     <script>
-        // ==========================================
-        // 1. SET YOUR SECRET PASSCODE HERE
-        // ==========================================
-        const SECRET_PASSCODE = "iloveyou"; // Change this to whatever you want!
+        const SECRET_PASSCODE = "hanian"; 
         
-        // ==========================================
-        // 2. EDIT YOUR COUPONS HERE
-        // ==========================================
         const couponsData = [
-            { id: 'c1', title: '🥞 Breakfast in Bed', desc: 'I will make your favorite breakfast.' },
+            { id: 'c1', title: '🥟 Breakfast in Bed', desc: 'I will make your favorite breakfast.' },
             { id: 'c2', title: '💆‍♀️ 30-Minute Massage', desc: 'A relaxing massage, anytime you want.' },
             { id: 'c3', title: '🍽️ Dining Out', desc: 'Your choice of restaurant, my treat!' },
             { id: 'c4', title: '🎬 Movie Picker', desc: 'You choose the movie, I bring the snacks.' },
@@ -144,18 +136,12 @@
             { id: 'c6', title: '🍷 Evening Drinks', desc: 'I will prepare your favorite cocktail or pour the wine.' }
         ];
 
-        // --- Passcode Logic ---
         function checkPasscode() {
-            // Get what she typed, make it lowercase, and remove extra spaces
             const input = document.getElementById('passcode-input').value.toLowerCase().trim();
-            
-            // Check if it matches (also making your secret code lowercase just in case)
             if (input === SECRET_PASSCODE.toLowerCase()) {
-                // Save that she unlocked it so she doesn't have to type it every time she opens the link
                 localStorage.setItem('siteUnlocked', 'true');
                 showCoupons();
             } else {
-                // Show error message
                 document.getElementById('error-msg').style.display = 'block';
             }
         }
@@ -166,7 +152,6 @@
             renderCoupons();
         }
 
-        // --- Coupon Logic ---
         const container = document.getElementById('coupons');
 
         function renderCoupons() {
@@ -200,8 +185,6 @@
             renderCoupons();
         }
 
-        // --- Start Up Check ---
-        // When she opens the page, check if she already unlocked it in the past
         if (localStorage.getItem('siteUnlocked') === 'true') {
             showCoupons();
         }
